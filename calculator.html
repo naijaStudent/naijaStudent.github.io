@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>University CGPA Calculator - Calculator</title>
-  <meta name="description" content="Easily calculate your CGPA for Nigerian Universities using our 5.0 scale calculator.">
-  <meta name="keywords" content="CGPA calculator, GPA, Nigerian University, study tips, resources, naija student">
+  <meta name="description" content="Calculate your CGPA easily using the Nigerian 5.0 scale with our professional University CGPA Calculator.">
+  <meta name="keywords" content="CGPA calculator, Nigerian University, student CGPA, 5.0 scale, naija student">
   <meta name="author" content="naijaStudent">
   <link rel="stylesheet" href="style.css">
-  
+
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3253581979430606"
      crossorigin="anonymous"></script>
@@ -30,25 +30,50 @@
 
   <!-- Hero Section -->
   <header class="hero">
-    <h1>CGPA Calculator 🎓</h1>
-    <p>Calculate your semester and cumulative GPA easily for Nigerian universities (5.0 scale).</p>
+    <h1>University CGPA Calculator 🎓</h1>
+    <p>Calculate your CGPA accurately using the Nigerian 5.0 scale.</p>
   </header>
 
   <!-- Calculator Section -->
   <section class="content">
-    <h2>Enter Your Grades</h2>
-    <form id="cgpaForm">
-      <div class="form-group">
-        <label for="grades">Grades (A-F, comma separated):</label>
-        <input type="text" id="grades" name="grades" required placeholder="e.g., A,B,C,B,A">
-      </div>
-      <div class="form-group">
-        <label for="units">Units (comma separated):</label>
-        <input type="text" id="units" name="units" required placeholder="e.g., 3,2,3,3,2">
-      </div>
-      <button type="button" onclick="calculateCGPA()">Calculate CGPA</button>
-    </form>
-    <div id="result" style="margin-top: 1.5rem; font-weight: bold; font-size: 1.2rem;"></div>
+    <h2>Enter Your Courses and Grades</h2>
+    <p>Fill in your courses, unit loads, and grades. Click "Calculate CGPA" to get your CGPA.</p>
+
+    <table id="cgpaTable" border="1" cellpadding="10" cellspacing="0" style="width:100%; max-width:800px; margin:auto;">
+      <thead>
+        <tr>
+          <th>Course Name</th>
+          <th>Unit Load</th>
+          <th>Grade (A-F)</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr>
+          <td><input type="text" placeholder="Course Name"></td>
+          <td><input type="number" placeholder="Units" min="0"></td>
+          <td>
+            <select>
+              <option value="">Select Grade</option>
+              <option value="5">A</option>
+              <option value="4">B</option>
+              <option value="3">C</option>
+              <option value="2">D</option>
+              <option value="1">E</option>
+              <option value="0">F</option>
+            </select>
+          </td>
+          <td><button onclick="removeRow(this)">Remove</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="text-align:center; margin:1rem;">
+      <button onclick="addRow()">Add Course</button>
+      <button onclick="calculateCGPA()">Calculate CGPA</button>
+    </div>
+
+    <h2 id="result" style="text-align:center; margin-top:1rem;"></h2>
   </section>
 
   <!-- AdSense Ad -->
@@ -71,34 +96,49 @@
 
   <!-- CGPA Script -->
   <script>
+    function addRow() {
+      const tableBody = document.getElementById("tableBody");
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td><input type="text" placeholder="Course Name"></td>
+        <td><input type="number" placeholder="Units" min="0"></td>
+        <td>
+          <select>
+            <option value="">Select Grade</option>
+            <option value="5">A</option>
+            <option value="4">B</option>
+            <option value="3">C</option>
+            <option value="2">D</option>
+            <option value="1">E</option>
+            <option value="0">F</option>
+          </select>
+        </td>
+        <td><button onclick="removeRow(this)">Remove</button></td>
+      `;
+      tableBody.appendChild(newRow);
+    }
+
+    function removeRow(button) {
+      const row = button.parentNode.parentNode;
+      row.parentNode.removeChild(row);
+    }
+
     function calculateCGPA() {
-        const gradesInput = document.getElementById("grades").value.toUpperCase().split(",");
-        const unitsInput = document.getElementById("units").value.split(",");
-        
-        if (gradesInput.length !== unitsInput.length) {
-            alert("Number of grades and units must match!");
-            return;
+      const rows = document.querySelectorAll("#tableBody tr");
+      let totalUnits = 0;
+      let totalPoints = 0;
+
+      rows.forEach(row => {
+        const unit = parseFloat(row.cells[1].querySelector("input").value);
+        const grade = parseFloat(row.cells[2].querySelector("select").value);
+        if (!isNaN(unit) && !isNaN(grade)) {
+          totalUnits += unit;
+          totalPoints += (unit * grade);
         }
-        
-        // Nigerian 5.0 scale grade mapping
-        const gradePoints = { "A": 5, "B": 4, "C": 3, "D": 2, "E": 1, "F": 0 };
-        
-        let totalPoints = 0;
-        let totalUnits = 0;
-        
-        for (let i = 0; i < gradesInput.length; i++) {
-            const grade = gradesInput[i].trim();
-            const unit = parseFloat(unitsInput[i].trim());
-            if (!gradePoints.hasOwnProperty(grade) || isNaN(unit)) {
-                alert("Invalid grade or unit entered!");
-                return;
-            }
-            totalPoints += gradePoints[grade] * unit;
-            totalUnits += unit;
-        }
-        
-        const cgpa = totalPoints / totalUnits;
-        document.getElementById("result").innerText = "Your CGPA is: " + cgpa.toFixed(2);
+      });
+
+      const cgpa = totalPoints / totalUnits;
+      document.getElementById("result").textContent = totalUnits === 0 ? "Please enter valid data." : `Your CGPA is: ${cgpa.toFixed(2)} / 5.0`;
     }
   </script>
 </body>
