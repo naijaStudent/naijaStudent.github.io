@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>University CGPA Calculator - Calculator</title>
+  <meta name="description" content="Easily calculate your CGPA for Nigerian Universities using our 5.0 scale calculator.">
+  <meta name="keywords" content="CGPA calculator, GPA, Nigerian University, study tips, resources, naija student">
+  <meta name="author" content="naijaStudent">
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3253581979430606"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">CGPA Portal</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="calculator.html" class="active">Calculator</a></li>
+      <li><a href="study-tips.html">Study Tips</a></li>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="privacy.html">Privacy Policy</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <h1>CGPA Calculator 🎓</h1>
+    <p>Calculate your semester and cumulative GPA easily for Nigerian universities (5.0 scale).</p>
+  </header>
+
+  <!-- Calculator Section -->
+  <section class="content">
+    <h2>Enter Your Grades</h2>
+    <form id="cgpaForm">
+      <div class="form-group">
+        <label for="grades">Grades (A-F, comma separated):</label>
+        <input type="text" id="grades" name="grades" required placeholder="e.g., A,B,C,B,A">
+      </div>
+      <div class="form-group">
+        <label for="units">Units (comma separated):</label>
+        <input type="text" id="units" name="units" required placeholder="e.g., 3,2,3,3,2">
+      </div>
+      <button type="button" onclick="calculateCGPA()">Calculate CGPA</button>
+    </form>
+    <div id="result" style="margin-top: 1.5rem; font-weight: bold; font-size: 1.2rem;"></div>
+  </section>
+
+  <!-- AdSense Ad -->
+  <div class="ads">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-3253581979430606"
+         data-ad-slot="3672447198"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 University CGPA Calculator | Designed by naijaStudent</p>
+  </footer>
+
+  <!-- CGPA Script -->
+  <script>
+    function calculateCGPA() {
+        const gradesInput = document.getElementById("grades").value.toUpperCase().split(",");
+        const unitsInput = document.getElementById("units").value.split(",");
+        
+        if (gradesInput.length !== unitsInput.length) {
+            alert("Number of grades and units must match!");
+            return;
+        }
+        
+        // Nigerian 5.0 scale grade mapping
+        const gradePoints = { "A": 5, "B": 4, "C": 3, "D": 2, "E": 1, "F": 0 };
+        
+        let totalPoints = 0;
+        let totalUnits = 0;
+        
+        for (let i = 0; i < gradesInput.length; i++) {
+            const grade = gradesInput[i].trim();
+            const unit = parseFloat(unitsInput[i].trim());
+            if (!gradePoints.hasOwnProperty(grade) || isNaN(unit)) {
+                alert("Invalid grade or unit entered!");
+                return;
+            }
+            totalPoints += gradePoints[grade] * unit;
+            totalUnits += unit;
+        }
+        
+        const cgpa = totalPoints / totalUnits;
+        document.getElementById("result").innerText = "Your CGPA is: " + cgpa.toFixed(2);
+    }
+  </script>
+</body>
+</html>
